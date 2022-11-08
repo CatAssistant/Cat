@@ -85,9 +85,9 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(4, 8);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(111, 21);
+            this.label1.Size = new System.Drawing.Size(113, 21);
             this.label1.TabIndex = 3;
-            this.label1.Text = "CAT | Alpha 0.1";
+            this.label1.Text = "CAT | Alpha 0.2";
             // 
             // SpeechRecognitionBox
             // 
