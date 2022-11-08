@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
+using System.Diagnostics;
 
 namespace Cat
 {
@@ -17,7 +18,7 @@ namespace Cat
         SpeechRecognitionEngine Recognition = new SpeechRecognitionEngine();
         SpeechSynthesizer Catt = new SpeechSynthesizer();
         SpeechRecognitionEngine IdleRecognition = new SpeechRecognitionEngine();
-        Choices choices = new Choices("What time is it", "How are you" , "Hey cat", "Stop listening");
+        Choices choices = new Choices("What time is it", "How are you" , "Hey cat", "Stop listening", "Stop talking", "Image search", "Exit");
         int Timeout = 0;
 
         public Main()
@@ -39,24 +40,51 @@ namespace Cat
             IdleRecognition.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(IdleRecognition_SpeechRecognized);
         }
 
+        
+
         private void Recognition_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             Timeout = 0;
             SpeechRecognitionBox.Text = e.Result.Text;
             switch (e.Result.Text)
             {
-                case "What time is it":
-                    Catt.SpeakAsync(DateTime.Now.ToString("hh:mm tt"));
+                case "Image search":
+                    Catt.SpeakAsync("What should I search for?");
+                    string query = FreeRecognition();
+                    Process.Start($"https://www.bing.com/images/search?q={query}");
                     break;
+
+                case "What time is it":
+                    Catt.SpeakAsync($"It is currently {DateTime.Now.ToString("hh:mm tt")}");
+                    break;
+
+
 
                 case "Stop listening":
                     Recognition.RecognizeAsyncCancel();
                     IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
                     break;
 
+
+
+                case "Stop talking":
+                    Catt.SpeakAsyncCancelAll();
+                    break;
+
+
+
+                case "Exit":
+                    Catt.Speak("Goodbye");
+                    Environment.Exit(0);
+                    break;
+
+
+
                 default:
                     break;
             }
+
+
         }
 
         private void Recognition_SpeechDetected(object sender, SpeechDetectedEventArgs e)
@@ -92,6 +120,17 @@ namespace Cat
                     IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
                     Timeout = 0;
                     break;
+            }
+        }
+
+        private string FreeRecognition()
+        {
+            using (SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture))
+            {
+                recognizer.LoadGrammar(new DictationGrammar());
+                recognizer.SetInputToDefaultAudioDevice();
+                RecognitionResult result = recognizer.Recognize();
+                return result.Text;
             }
         }
     }
