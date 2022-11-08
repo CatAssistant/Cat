@@ -1,0 +1,13 @@
+G:\Backup\Coding\Cat\bin\Debug\Cat.exe.config
+G:\Backup\Coding\Cat\bin\Debug\Cat.exe
+G:\Backup\Coding\Cat\bin\Debug\Cat.pdb
+G:\Backup\Coding\Cat\bin\Debug\Guna.UI2.dll
+G:\Backup\Coding\Cat\obj\Debug\Cat.csproj.AssemblyReference.cache
+G:\Backup\Coding\Cat\obj\Debug\Cat.csproj.SuggestedBindingRedirects.cache
+G:\Backup\Coding\Cat\obj\Debug\Cat.Main.resources
+G:\Backup\Coding\Cat\obj\Debug\Cat.Properties.Resources.resources
+G:\Backup\Coding\Cat\obj\Debug\Cat.csproj.GenerateResource.cache
+G:\Backup\Coding\Cat\obj\Debug\Cat.csproj.CoreCompileInputs.cache
+G:\Backup\Coding\Cat\obj\Debug\Cat.csproj.CopyComplete
+G:\Backup\Coding\Cat\obj\Debug\Cat.exe
+G:\Backup\Coding\Cat\obj\Debug\Cat.pdb
