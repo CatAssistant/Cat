@@ -10,16 +10,20 @@ using System.Windows.Forms;
 using System.Speech.Recognition;
 using System.Speech.Synthesis;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace Cat
 {
     public partial class Main : Form
     {
         //Variables
-        SpeechRecognitionEngine Recognition = new SpeechRecognitionEngine();
-        SpeechSynthesizer Catt = new SpeechSynthesizer();
-        SpeechRecognitionEngine IdleRecognition = new SpeechRecognitionEngine();
-        Choices choices = new Choices("What time is it", "How are you" , "Hey cat", "Stop listening", "Stop talking", "Image search", "Exit");
+        readonly SpeechRecognitionEngine Recognition = new SpeechRecognitionEngine();
+        readonly SpeechSynthesizer Catt = new SpeechSynthesizer();
+        readonly SpeechRecognitionEngine IdleRecognition = new SpeechRecognitionEngine();
+        readonly Choices choices = new Choices("What time is it", "How are you" , "Hey cat", "Stop listening", "Stop talking", "Run a image search", "Run a search", "Launch Game");
         int Timeout = 0;
 
 
@@ -58,7 +62,32 @@ namespace Cat
             }
         }
 
+        private string GameRecognition()
+        {
+            using(SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture))
+            {
+                string game;
+                try
+                {
+                    Choices games = new Choices("Warframe", "C S GO", "M W 2");
+                    recognizer.LoadGrammarAsync(new Grammar(new GrammarBuilder(games)));
+                    recognizer.SetInputToDefaultAudioDevice();
+                    RecognitionResult result = recognizer.Recognize();
+                    game = result.Text;
+                    if (game == "C S GO") { game = "Counter-Strike: Global Offensive"; }
 
+                    else if (game == "M W 2") { game = "Call of Duty®: Modern Warfare® II"; }
+                    SpeechRecognitionBox.Text = game;
+                }
+
+                catch (NullReferenceException)
+                {
+                    Catt.SpeakAsync("Sorry I couldn't find that game");
+                    game = null;
+                }
+                return game;
+            }
+        }
 
 
         // Events
@@ -66,25 +95,34 @@ namespace Cat
         {
             Timeout = 0;
             SpeechRecognitionBox.Text = e.Result.Text;
+            string query;
             switch (e.Result.Text)
             {
-                case "Image search":
+                case "Run a search":
                     Catt.SpeakAsync("What should I search for?");
-                    string query = FreeRecognition();
+                    query = FreeRecognition();
+                    Process.Start($"https://www.bing.com/search?q={query}");
+                    break;
+
+
+                case "Run a image search":
+                    Catt.SpeakAsync("What should I search for?");
+                    query = FreeRecognition();
                     Process.Start($"https://www.bing.com/images/search?q={query}");
                     break;
 
-                case "What time is it":
-                    Catt.SpeakAsync($"It is currently {DateTime.Now.ToString("hh:mm tt")}");
-                    break;
 
+                case "What time is it":
+                    Catt.SpeakAsync($"It is currently {DateTime.Now:hh:mm tt}");
+                    break;
 
 
                 case "Stop listening":
+                    ListenTimer.Stop();
+                    Timeout = 0;
                     Recognition.RecognizeAsyncCancel();
                     IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
                     break;
-
 
 
                 case "Stop talking":
@@ -92,12 +130,39 @@ namespace Cat
                     break;
 
 
+                case "Launch Game":
+                    Catt.SpeakAsync("What game should I launch?");
+                    using (WebClient wc = new WebClient())
+                    {
+                        string game = GameRecognition();
+                        //Download Steam App Library
+                        if (game == null) 
+                        {
+                            Catt.SpeakAsync("Sorry that game is not supported");
+                        }
 
-                case "Exit":
-                    Catt.Speak("Goodbye");
-                    Environment.Exit(0);
+                        else
+                        {
+                            if (File.Exists("steamlib.json")) { }
+                            else { wc.DownloadFile("https://api.steampowered.com/ISteamApps/GetAppList/v2/", "steamlib.json"); }
+                            
+                            //Run Game
+                            try
+                            {
+                                Process.Start($"steam://rungameid/{(int)JObject.Parse(File.ReadAllText("steamlib.json"))["applist"]["apps"].FirstOrDefault(a => (string)a["name"] == game)?["appid"]}");
+                                Catt.SpeakAsync($"Launching {game}");
+                            }
+
+                            //Catch error that occurs if intepreted game does not exist
+                            catch (System.ArgumentNullException)
+                            {
+                                Catt.SpeakAsync("I could not find that game");
+                            }
+                        }
+
+                        
+                    }
                     break;
-
 
 
                 default:
@@ -135,18 +200,9 @@ namespace Cat
                     break;
 
                 case 11:
-                    ListenTimer.Stop();
-                    Timeout = 0;
-                    try
-                    {
-                        IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
-                    }
-
-                    catch (InvalidOperationException)
-                    {
-                        IdleRecognition.RecognizeAsyncCancel();
-                        IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
-                    }
+                    ListenTimer.Stop();Timeout = 0;
+                    try { IdleRecognition.RecognizeAsync(RecognizeMode.Multiple); }
+                    catch (InvalidOperationException){}
                     break;
             }
         }

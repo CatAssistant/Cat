@@ -29,14 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.BorderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
             this.TitleLabel = new System.Windows.Forms.Label();
             this.SpeechRecognitionBox = new System.Windows.Forms.TextBox();
             this.ListenTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeoutDisplay = new System.Windows.Forms.Label();
             this.TitleBackground = new System.Windows.Forms.PictureBox();
-            this.FadeInTimer = new System.Windows.Forms.Timer(this.components);
-            this.FadeOutTimer = new System.Windows.Forms.Timer(this.components);
             this.CatLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBackground)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CatLogo)).BeginInit();
@@ -121,6 +120,7 @@
             this.Controls.Add(this.TimeoutDisplay);
             this.Controls.Add(this.SpeechRecognitionBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.Text = "Cat!";
             this.Load += new System.EventHandler(this.Main_Load);
@@ -139,8 +139,6 @@
         private System.Windows.Forms.TextBox SpeechRecognitionBox;
         private System.Windows.Forms.Timer ListenTimer;
         private System.Windows.Forms.Label TimeoutDisplay;
-        private System.Windows.Forms.Timer FadeInTimer;
-        private System.Windows.Forms.Timer FadeOutTimer;
         private System.Windows.Forms.PictureBox CatLogo;
     }
 }
