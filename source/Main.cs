@@ -15,12 +15,17 @@ namespace Cat
 {
     public partial class Main : Form
     {
+        //Variables
         SpeechRecognitionEngine Recognition = new SpeechRecognitionEngine();
         SpeechSynthesizer Catt = new SpeechSynthesizer();
         SpeechRecognitionEngine IdleRecognition = new SpeechRecognitionEngine();
         Choices choices = new Choices("What time is it", "How are you" , "Hey cat", "Stop listening", "Stop talking", "Image search", "Exit");
         int Timeout = 0;
 
+
+
+
+        //Form Code
         public Main()
         {
             InitializeComponent();
@@ -32,16 +37,31 @@ namespace Cat
             Recognition.SetInputToDefaultAudioDevice();
             Recognition.LoadGrammarAsync(new Grammar(new GrammarBuilder(choices)));
             Recognition.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(Recognition_SpeechRecognized);
-            //Recognition.SpeechDetected += new EventHandler<SpeechDetectedEventArgs>(Recognition_SpeechDetected);
             Recognition.RecognizeAsync(RecognizeMode.Multiple);
-
             IdleRecognition.SetInputToDefaultAudioDevice();
             IdleRecognition.LoadGrammarAsync(new Grammar(new GrammarBuilder(choices)));
             IdleRecognition.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(IdleRecognition_SpeechRecognized);
         }
 
-        
 
+
+
+        //Functions
+        private string FreeRecognition()
+        {
+            using (SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture))
+            {
+                recognizer.LoadGrammar(new DictationGrammar());
+                recognizer.SetInputToDefaultAudioDevice();
+                RecognitionResult result = recognizer.Recognize();
+                return result.Text;
+            }
+        }
+
+
+
+
+        // Events
         private void Recognition_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             Timeout = 0;
@@ -87,11 +107,6 @@ namespace Cat
 
         }
 
-        private void Recognition_SpeechDetected(object sender, SpeechDetectedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void IdleRecognition_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             switch (e.Result.Text)
@@ -105,7 +120,11 @@ namespace Cat
             }
         }
 
-        private void TmrSpeaking_Tick(object sender, EventArgs e)
+
+
+
+        //Timers
+        private void ListenTimer_Tick(object sender, EventArgs e)
         {
             Timeout += 1;
             TimeoutDisplay.Text = Timeout.ToString();
@@ -117,20 +136,18 @@ namespace Cat
 
                 case 11:
                     ListenTimer.Stop();
-                    IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
                     Timeout = 0;
-                    break;
-            }
-        }
+                    try
+                    {
+                        IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
+                    }
 
-        private string FreeRecognition()
-        {
-            using (SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine(System.Globalization.CultureInfo.CurrentCulture))
-            {
-                recognizer.LoadGrammar(new DictationGrammar());
-                recognizer.SetInputToDefaultAudioDevice();
-                RecognitionResult result = recognizer.Recognize();
-                return result.Text;
+                    catch (InvalidOperationException)
+                    {
+                        IdleRecognition.RecognizeAsyncCancel();
+                        IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
+                    }
+                    break;
             }
         }
     }

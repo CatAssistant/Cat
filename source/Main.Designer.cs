@@ -30,14 +30,16 @@
         {
             this.components = new System.ComponentModel.Container();
             this.BorderlessForm = new Guna.UI2.WinForms.Guna2BorderlessForm(this.components);
-            this.catLogo = new System.Windows.Forms.PictureBox();
-            this.TitleBackground = new System.Windows.Forms.PictureBox();
             this.TitleLabel = new System.Windows.Forms.Label();
             this.SpeechRecognitionBox = new System.Windows.Forms.TextBox();
             this.ListenTimer = new System.Windows.Forms.Timer(this.components);
             this.TimeoutDisplay = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.catLogo)).BeginInit();
+            this.TitleBackground = new System.Windows.Forms.PictureBox();
+            this.FadeInTimer = new System.Windows.Forms.Timer(this.components);
+            this.FadeOutTimer = new System.Windows.Forms.Timer(this.components);
+            this.CatLogo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBackground)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CatLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // BorderlessForm
@@ -45,25 +47,6 @@
             this.BorderlessForm.ContainerControl = this;
             this.BorderlessForm.DockIndicatorTransparencyValue = 0.6D;
             this.BorderlessForm.TransparentWhileDrag = true;
-            // 
-            // catLogo
-            // 
-            this.catLogo.Image = global::Cat.Properties.Resources.cat_logo_transp;
-            this.catLogo.Location = new System.Drawing.Point(83, 67);
-            this.catLogo.Name = "catLogo";
-            this.catLogo.Size = new System.Drawing.Size(266, 274);
-            this.catLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.catLogo.TabIndex = 0;
-            this.catLogo.TabStop = false;
-            // 
-            // TitleBackground
-            // 
-            this.TitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.TitleBackground.Location = new System.Drawing.Point(-1, -7);
-            this.TitleBackground.Name = "TitleBackground";
-            this.TitleBackground.Size = new System.Drawing.Size(444, 38);
-            this.TitleBackground.TabIndex = 1;
-            this.TitleBackground.TabStop = false;
             // 
             // TitleLabel
             // 
@@ -75,7 +58,7 @@
             this.TitleLabel.Name = "TitleLabel";
             this.TitleLabel.Size = new System.Drawing.Size(113, 21);
             this.TitleLabel.TabIndex = 3;
-            this.TitleLabel.Text = "CAT | Alpha 0.2";
+            this.TitleLabel.Text = "CAT | Alpha 0.3";
             // 
             // SpeechRecognitionBox
             // 
@@ -94,7 +77,7 @@
             // 
             this.ListenTimer.Enabled = true;
             this.ListenTimer.Interval = 1000;
-            this.ListenTimer.Tick += new System.EventHandler(this.TmrSpeaking_Tick);
+            this.ListenTimer.Tick += new System.EventHandler(this.ListenTimer_Tick);
             // 
             // TimeoutDisplay
             // 
@@ -106,23 +89,43 @@
             this.TimeoutDisplay.TabIndex = 5;
             this.TimeoutDisplay.Text = "0";
             // 
+            // TitleBackground
+            // 
+            this.TitleBackground.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.TitleBackground.Location = new System.Drawing.Point(-1, -7);
+            this.TitleBackground.Name = "TitleBackground";
+            this.TitleBackground.Size = new System.Drawing.Size(444, 38);
+            this.TitleBackground.TabIndex = 1;
+            this.TitleBackground.TabStop = false;
+            // 
+            // CatLogo
+            // 
+            this.CatLogo.BackColor = System.Drawing.Color.Transparent;
+            this.CatLogo.Image = global::Cat.Properties.Resources.cat_logo_transp;
+            this.CatLogo.Location = new System.Drawing.Point(57, 109);
+            this.CatLogo.Name = "CatLogo";
+            this.CatLogo.Size = new System.Drawing.Size(319, 319);
+            this.CatLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CatLogo.TabIndex = 11;
+            this.CatLogo.TabStop = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.ClientSize = new System.Drawing.Size(433, 594);
-            this.Controls.Add(this.TimeoutDisplay);
-            this.Controls.Add(this.SpeechRecognitionBox);
             this.Controls.Add(this.TitleLabel);
             this.Controls.Add(this.TitleBackground);
-            this.Controls.Add(this.catLogo);
+            this.Controls.Add(this.CatLogo);
+            this.Controls.Add(this.TimeoutDisplay);
+            this.Controls.Add(this.SpeechRecognitionBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Main";
             this.Text = "Cat!";
             this.Load += new System.EventHandler(this.Main_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.catLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TitleBackground)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CatLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,12 +134,14 @@
         #endregion
 
         private Guna.UI2.WinForms.Guna2BorderlessForm BorderlessForm;
-        private System.Windows.Forms.PictureBox catLogo;
         private System.Windows.Forms.PictureBox TitleBackground;
         private System.Windows.Forms.Label TitleLabel;
         private System.Windows.Forms.TextBox SpeechRecognitionBox;
         private System.Windows.Forms.Timer ListenTimer;
         private System.Windows.Forms.Label TimeoutDisplay;
+        private System.Windows.Forms.Timer FadeInTimer;
+        private System.Windows.Forms.Timer FadeOutTimer;
+        private System.Windows.Forms.PictureBox CatLogo;
     }
 }
 
