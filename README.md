@@ -7,7 +7,7 @@ Current Commands:
 "Hey cat" - activation phrase
 
 "What time is it"
-----------
+
 "Image search"
 
 "Stop listening"
