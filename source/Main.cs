@@ -108,7 +108,7 @@ namespace Cat
         private void TmrSpeaking_Tick(object sender, EventArgs e)
         {
             Timeout += 1;
-            label2.Text = Timeout.ToString();
+            TimeoutDisplay.Text = Timeout.ToString();
             switch (Timeout)
             {
                 case 10:
@@ -116,7 +116,7 @@ namespace Cat
                     break;
 
                 case 11:
-                    TmrSpeaking.Stop();
+                    ListenTimer.Stop();
                     IdleRecognition.RecognizeAsync(RecognizeMode.Multiple);
                     Timeout = 0;
                     break;
