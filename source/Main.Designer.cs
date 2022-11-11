@@ -55,9 +55,9 @@
             this.TitleLabel.ForeColor = System.Drawing.Color.White;
             this.TitleLabel.Location = new System.Drawing.Point(4, 4);
             this.TitleLabel.Name = "TitleLabel";
-            this.TitleLabel.Size = new System.Drawing.Size(113, 21);
+            this.TitleLabel.Size = new System.Drawing.Size(114, 21);
             this.TitleLabel.TabIndex = 3;
-            this.TitleLabel.Text = "CAT | Alpha 0.3";
+            this.TitleLabel.Text = "CAT | Alpha 0.4";
             // 
             // SpeechRecognitionBox
             // 
@@ -74,7 +74,6 @@
             // 
             // ListenTimer
             // 
-            this.ListenTimer.Enabled = true;
             this.ListenTimer.Interval = 1000;
             this.ListenTimer.Tick += new System.EventHandler(this.ListenTimer_Tick);
             // 
